@@ -1,0 +1,27 @@
+name: DevSync Automated Daily Update
+
+on:
+  schedule:
+    # Runs at 04:30 UTC every day (Must be specific HH:MM)
+    - cron: '30 4 * * *'
+  workflow_dispatch: # This allows us to trigger it manually for testing
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Required step with your email in the name
+      - name: Setup for 22f3003117@ds.study.iitm.ac.in
+        run: |
+          git config --global user.name "DevSync Bot"
+          git config --global user.email "22f3003117@ds.study.iitm.ac.in"
+
+      - name: Create Daily Update
+        run: |
+          echo "Automated update on $(date)" >> activity_log.txt
+          git add activity_log.txt
+          git commit -m "Automated daily activity log: $(date)"
+          git push
